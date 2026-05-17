@@ -1,0 +1,189 @@
+{
+  "name": "Contact Form Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Contact us - kissan connect",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Phone No",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "what is your query?"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        64,
+        0
+      ],
+      "id": "565215b6-684e-4123-a745-bf2bfb7d0df6",
+      "name": "On form submission",
+      "webhookId": "4cf1617a-e522-474f-98eb-a6aae178d934"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1dPDTcL-S9BFBfD0oz_auzCbRN-cbpH_DhOG0JVVq2RU/edit?pli=1&gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dPDTcL-S9BFBfD0oz_auzCbRN-cbpH_DhOG0JVVq2RU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.Name }}",
+            "Email": "={{ $json.Email }}",
+            "Phone No": "={{ $json['Phone No'] }}",
+            "Query": "={{ $json['what is your query?'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone No",
+              "displayName": "Phone No",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Query",
+              "displayName": "Query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED",
+          "useAppend": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        352,
+        0
+      ],
+      "id": "4765913b-5bb7-4471-9ffc-60489ca283b2",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jPfVPtI29rC7OnVE",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json.Email }}",
+        "subject": "new query",
+        "emailType": "text",
+        "message": "=hey  {{ $('On form submission').item.json.Name }}\nwe got your query {{ $('On form submission').item.json['what is your query?'] }}\n\nwe will assure you to answer .\n\nthank you....",
+        "options": {
+          "senderName": "kissan connect"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        0
+      ],
+      "id": "98678d65-d846-4873-89f9-b467463ef61d",
+      "name": "Send a message",
+      "webhookId": "ab7fbe60-8b64-491d-895e-cd8a3b4e1a09",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "gOskGAh1QwqrZZBC",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d2eb2c95-a5e6-4706-9c45-617ebd49542c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b92dfba6a07658894134ee5f0c03dca18ab27a1fbc73d57def082778a310b47f"
+  },
+  "id": "GUVYWwcjNIJmBgvJ",
+  "tags": []
+}
